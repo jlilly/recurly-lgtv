@@ -1,0 +1,10 @@
+{
+  "id": "com.recurly.bug.demo",
+  "version": "0.0.1",
+  "vendor": "Joe Lilly",
+  "type": "web",
+  "main": "index.html",
+  "title": "Recurly Bug Demo",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png"
+}
