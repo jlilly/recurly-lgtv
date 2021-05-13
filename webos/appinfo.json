@@ -5,6 +5,6 @@
   "type": "web",
   "main": "index.html",
   "title": "Recurly Bug Demo",
-  "icon": "icon.png",
-  "largeIcon": "largeIcon.png"
+  "icon": "bug-small.png",
+  "largeIcon": "bug.png"
 }
