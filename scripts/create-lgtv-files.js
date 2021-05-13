@@ -1,14 +1,21 @@
 'use strict'
 
 // This script creates the index.html file neseccary to launch an app on
-// an webos enabled LGTV for debugging purposes
+// an webos enabled LGTV for debugging purposes, then creates the .ipk
+// needed to install on the LGTV.
+//
+// You will need to run this script if:
+// 1: You haven't already run `npm start`
+// 2: Your local IP changes
+// 3: You wish to change the port of the ng dev server
 //
 // For more information:
 // https://webostv.developer.lge.com/ 
 
+const { execSync } = require('child_process')
+const fs = require('fs')
 const { networkInterfaces } = require('os')
 const readline = require('readline')
-const fs = require('fs')
 const { sep } = require('path')
 
 const appName = 'LGTV hosted app'
@@ -24,11 +31,18 @@ const port = 4200
 
 // Main logic
 
+if ( !process.env.WEBOS_CLI_TV ) {
+  console.error('Error: $WEBOS_CLI_TV is undefined');
+  console.error('This script requires webOS CLI to be installed');
+  console.error('See: https://webostv.developer.lge.com/sdk/installation/');
+  process.exit(1);
+}
+
 const ipList = getIps()
 
 if (ipList.length > 1) promptOnMultipleIps(ipList)
 else if (ipList.length === 0) noIps()
-else createIndexFile(ipList[0])
+else createFiles(ipList[0])
 
 // Functions
 
@@ -65,7 +79,7 @@ function promptOnMultipleIps(ips) {
     }
 
     rl.close()
-    createIndexFile(ips[index - 1])
+    createFiles(ips[index - 1])
   })
 }
 
@@ -102,13 +116,32 @@ function createIndexFile(ip) {
     fs.mkdirSync(dir)
   }
 
-  fs.writeFile(`${dir}/${filename}`, indexFile, 'utf8', err => {
-    if (err) {
-      console.error(err.message)
-      console.error('index.html was not created')
-      process.exit(1)
-    }
+  try {
+    fs.writeFileSync(`${dir}/${filename}`, indexFile, 'utf8');
+  } catch (e) {
+    console.error(e.message)
+    console.error('index.html was not created')
+    process.exit(1)
+  }
+  console.log('Success!')
+}
 
-    console.log('Success!')
-  })
+function createPackage() {
+  try {
+    const output = execSync(`${process.env.WEBOS_CLI_TV}${sep}ares-package .`, {
+      cwd: `${process.cwd()}${sep}webos`,
+      encoding: 'utf8'
+    });
+    console.log(output);
+
+  } catch (e) {
+    console.error(e.message);
+    console.error('webOS package was not created');
+    process.exit(1);
+  }
+}
+
+function createFiles(ip) {
+  createIndexFile(ip);
+  createPackage();
 }
