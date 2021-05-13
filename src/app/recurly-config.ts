@@ -1,1 +1,1 @@
-export const RecurlyConfig = 'apikey';
+export const RecurlyApiKey = 'apikey';
