@@ -24,6 +24,7 @@ if ( !webosRoot ) {
 
 // Main logic flow here
 
+console.log('Installing and launching app on a LGTV');
 const devices = getLGTVs();
 if (devices.length > 1) promptOnMultipleDevices(devices);
 else installAndLaunch(devices[0]);
@@ -97,7 +98,7 @@ function installPackage(device) {
     console.log(output);
   } catch(e) {
     console.error(e.message);
-    console.error('App not installed on TV');
+    console.error(`App not installed on ${device}`);
     process.exit(1);
   }
 }
@@ -109,7 +110,7 @@ function launchApp(device) {
     console.log(output);
   } catch(e) {
     console.error(e.message);
-    console.error('App not launched on TV');
+    console.error(`App not launched on ${device}`);
     process.exit(1);
   }
 }

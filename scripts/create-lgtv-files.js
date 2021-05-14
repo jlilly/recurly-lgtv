@@ -44,6 +44,7 @@ if ( !process.env.WEBOS_CLI_TV ) {
 
 const ipList = getIps();
 
+console.log('Creating the files necessary to launch on LGTVs');
 if (ipList.length > 1) promptOnMultipleIps(ipList);
 else if (ipList.length === 0) noIps();
 else createFiles(ipList[0]);
