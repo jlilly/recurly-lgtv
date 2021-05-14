@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict'
 
 // This script will package, install and launch on a webos enabled LGTV

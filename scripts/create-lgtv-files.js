@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict'
 
 // This script creates the index.html file neseccary to launch an app on
