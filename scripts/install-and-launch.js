@@ -97,6 +97,7 @@ function installPackage(device) {
   } catch(e) {
     console.error(e.message);
     console.error('App not installed on TV');
+    process.exit(1);
   }
 }
 
@@ -108,6 +109,7 @@ function launchApp(device) {
   } catch(e) {
     console.error(e.message);
     console.error('App not launched on TV');
+    process.exit(1);
   }
 }
 
