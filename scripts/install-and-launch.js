@@ -119,4 +119,3 @@ function installAndLaunch(device) {
   installPackage(device);
   launchApp(device);
 }
-
