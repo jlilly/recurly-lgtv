@@ -32,6 +32,8 @@ export class AppComponent implements OnInit{
     const elements = recurly.Elements();
     const cardElement = elements.CardElement();
     cardElement.attach('#recurly-elements');
+
+    setTimeout(() => cardElement.focus(), 1000);
   }
 
 }
