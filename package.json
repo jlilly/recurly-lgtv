@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "scripts/start.sh",
     "build": "ng build",
     "prepare": "husky install"
   },
