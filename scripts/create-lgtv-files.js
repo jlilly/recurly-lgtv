@@ -9,6 +9,8 @@
 // 2: Your local IP changes
 // 3: You wish to change the port of the ng dev server
 //
+// After this you can run `install-and-launch.js` to run the app on the tv
+//
 // For more information:
 // https://webostv.developer.lge.com/ 
 
@@ -31,6 +33,7 @@ const port = 4200
 
 // Main logic
 
+// Check to see if webos cli is installed
 if ( !process.env.WEBOS_CLI_TV ) {
   console.error('Error: $WEBOS_CLI_TV is undefined');
   console.error('This script requires webOS CLI to be installed');
