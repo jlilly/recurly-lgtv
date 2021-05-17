@@ -2,9 +2,10 @@
   "name": "recurly-lgtv",
   "version": "0.0.0",
   "scripts": {
+    "build": "ng build",
+    "debug": "scripts/debug-lgtv.js",
     "ng": "ng",
     "start": "scripts/start.sh",
-    "build": "ng build",
     "prepare": "husky install"
   },
   "private": true,
