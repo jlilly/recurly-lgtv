@@ -18,8 +18,8 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const { networkInterfaces } = require('os');
-const readline = require('readline');
 const { sep } = require('path');
+const { promptOnMultipleOptions, webosRoot } =  require('./utils');
 
 const appName = 'LGTV hosted app';
 
@@ -33,26 +33,14 @@ const filename = 'index.html';
 const port = 4200;
 
 // Main logic
-
-// Check to see if webos cli is installed
-if ( !process.env.WEBOS_CLI_TV ) {
-  console.error('Error: $WEBOS_CLI_TV is undefined');
-  console.error('This script requires webOS CLI to be installed');
-  console.error('See: https://webostv.developer.lge.com/sdk/installation/');
-  process.exit(1);
-}
-
-const ipList = getIps();
-
 console.log('Creating the files necessary to launch on LGTVs');
-if (ipList.length > 1) promptOnMultipleIps(ipList);
-else if (ipList.length === 0) noIps();
-else createFiles(ipList[0]);
+getIp().then(createFiles);
 
 // Functions
 
-// Find all IPv4 addresses on all network interfaces
-function getIps() {
+// Get valid IPv4 LAN addr for this machine
+// Prompts the user if ther are multiple IPs (EG on a VPN)
+function getIp() {
   const ips = [];
   const nets = networkInterfaces();
   for (const name of Object.keys(nets)) {
@@ -63,32 +51,16 @@ function getIps() {
       }
     }
   }
-  return ips;
-}
 
-// Ask the user to specify which ip to use
-function promptOnMultipleIps(ips) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
-  ips.forEach((ip, index) => console.log(`${index + 1})\t${ip}`));
-  rl.question('Please select your LAN IP address from the list above: ', selection => {
-    const index = +selection; // force into number
-    if (Number.isNaN(index) || index < 1 || index > ips.length) {
-      console.error(`Invalid selection: ${selection}`);
-      console.error('Please re-run this script to try again');
-      rl.close();
-      process.exit(1);
-    }
-
-    rl.close();
-    createFiles(ips[index - 1]);
+  if( !ips.length ) return noIps();
+  if( ips.length === 1 ) return Promise.resolve(ips[0]);
+  return promptOnMultipleOptions({
+    question: 'Please select your LAN IP address from the list above: ',
+    options: ips
   });
 }
 
-// Helper fn for when no ips addrs were found
+// Helper fn for when no ips addrs are found
 function noIps() {
   console.error('An IP address was not found');
   console.error('Please check your network and try again');
@@ -96,7 +68,7 @@ function noIps() {
   process.exit(1);
 }
 
-// Create the index.html file needed to point to the ng dev server
+// Create the index.html file needed to point the tv to the ng dev server
 function createIndexFile(ip) {
   // NOTE: use encodeURIComponent if there are special chars in the url
   const url = `http://${ip}:${port}`;
@@ -133,8 +105,8 @@ function createIndexFile(ip) {
 
 function createPackage() {
   try {
-    const output = execSync(`${process.env.WEBOS_CLI_TV}${sep}ares-package .`, {
-      cwd: `${process.cwd()}${sep}webos`,
+    const output = execSync(`${webosRoot}${sep}ares-package .`, {
+      cwd: `${process.cwd()}${sep}${dir}`,
       encoding: 'utf8'
     });
     console.log(output);

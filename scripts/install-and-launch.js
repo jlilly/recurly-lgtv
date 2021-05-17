@@ -9,65 +9,13 @@
 // https://webostv.developer.lge.com/
 
 const { execSync } = require('child_process');
-const readline = require('readline');
 const { sep } = require('path');
 const { id: appid } = require('../webos/appinfo.json');
+const { getLGTV, webosRoot } = require('./utils.js');
 
-// Check to see if webos cli is installed
-const webosRoot = process.env.WEBOS_CLI_TV;
-if ( !webosRoot ) {
-  console.error('Error: $WEBOS_CLI_TV is undefined');
-  console.error('This script requires webOS CLI to be installed');
-  console.error('See: https://webostv.developer.lge.com/sdk/installation/');
-  process.exit(1);
-}
-
-// Main logic flow here
-
+// Main logic flow
 console.log('Installing and launching app on a LGTV');
-const devices = getLGTVs();
-if (devices.length > 1) promptOnMultipleDevices(devices);
-else installAndLaunch(devices[0]);
-
-// Get all the TVs on the network
-function getLGTVs() {
-  let deviceList = [];
-  try {
-    deviceList = execSync(`${webosRoot}${sep}ares-inspect -D`, { encoding: 'utf8' })
-                  .split('\n')
-                  .map(ln => ln.split(' ')[0])
-                  .filter(name => !!name && !(name === 'name' || name.startsWith('-')));
-  } catch (e) {
-    console.error(e.message);
-    process.exit(1);
-  }
-
-  return deviceList;
-}
-
-// Ask the user to specify which device to use
-function promptOnMultipleDevices(devices) {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-  });
-
-  devices.forEach((device, index) => console.log(`${index + 1})\t${device}`));
-  rl.question('Please select the target TV from the list above: ',
-    selection => {
-      const index = +selection; // force into number
-      if (Number.isNaN(index) || index < 1 || index > devices.length) {
-        console.error(`Invalid selection: ${selection}`);
-        console.error('Please re-run this script to try again');
-        rl.close();
-        process.exit(1);
-      }
-
-      rl.close();
-      installAndLaunch(devices[index - 1]);
-    }
-  )
-}
+getLGTV().then(installAndLaunch);
 
 // Install the ipk on the TV
 function installPackage(device) {

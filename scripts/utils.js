@@ -29,23 +29,37 @@ function getLGTV() {
     process.exit(1);
   }
 
-  if( deviceList.length === 1 ) return Promise.resolve(deviceList[0])
-  return promptOnMultipleDevices(deviceList);
+
+  if( !deviceList.length ) return noTvs();
+  if( deviceList.length === 1 ) return Promise.resolve(deviceList[0]);
+  return promptOnMultipleOptions({
+    options: deviceList,
+    question: 'Please select the target TV from the list above: '
+  });
 }
 
-// Ask the user to specify which device to use
-function promptOnMultipleDevices(devices) {
+// Helper fn for when no tvs are found
+function noTvs() {
+  console.error('No LGTVs were found');
+  console.error('Is dev mode enabled on the TV?');
+  console.error('Is the TV connected to the same LAN as this computer?');
+  console.error('Please try again');
+  process.exit(1);
+}
+
+// Ask the user to specify which option to use
+function promptOnMultipleOptions({ options, question }) {
   return new Promise((resolve, reject) => {
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
     });
 
-    devices.forEach((device, index) => console.log(`${index + 1})\t${device}`));
-    rl.question('Please select the target TV from the list above: ',
+    options.forEach((option, index) => console.log(`${index + 1})\t${option}`));
+    rl.question(question,
       selection => {
       const index = +selection; // force into number
-      if (Number.isNaN(index) || index < 1 || index > devices.length) {
+      if (Number.isNaN(index) || index < 1 || index > options.length) {
           console.error(`Invalid selection: ${selection}`);
           console.error('Please re-run this script to try again');
           rl.close();
@@ -53,9 +67,9 @@ function promptOnMultipleDevices(devices) {
       }
 
       rl.close();
-      resolve(devices[index - 1]);
-    })
+      resolve(options[index - 1]);
+    });
   });
 }
 
-module.exports = { getLGTV, webosRoot };
+module.exports = { getLGTV, promptOnMultipleOptions, webosRoot };
