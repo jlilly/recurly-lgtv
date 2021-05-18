@@ -3,6 +3,7 @@ import { CardElement, Recurly } from '@recurly/recurly-js';
 import { RecurlyApiKey } from './recurly-config';
 
 declare const recurly: Recurly;
+declare const webOS: any;
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,12 @@ declare const recurly: Recurly;
   <li>Delete last character
   <li>Try to type any other number into the card number field
 </ol>
-<span class="user-agent">User Agent: {{ userAgent }}</span>
+<div class="device-info">
+  <div>Model: {{modelName}}</div>
+  <div>OS Version: {{osVersion}}</div>
+  <div>SDK Version: {{sdkVersion}}</div>
+  <div>User Agent: {{ userAgent }}</div>
+</div>
   `,
   styleUrls: ['./app.component.scss']
 })
@@ -44,9 +50,17 @@ export class AppComponent implements OnInit{
     }
   });
   userAgent = navigator.userAgent;
+  modelName = '';
+  osVersion = '';
+  sdkVersion = ''
 
   ngOnInit() {
     recurly.configure(RecurlyApiKey);
+    webOS.deviceInfo(({ modelName, version, sdkVersion }: any) => {
+      this.modelName = modelName;
+      this.osVersion = version;
+      this.sdkVersion = sdkVersion;
+    });
   }
 
   ngAfterViewInit() {

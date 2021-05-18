@@ -56,7 +56,9 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "webos/webOSTVjs-1.2.3/webOSTV.js"
+            ]
           },
           "configurations": {
             "production": {
