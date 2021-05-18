@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "ng build",
+    "clean": "rm webos/*.ipk && rm webos/index.html",
     "debug": "scripts/debug-lgtv.js",
     "ng": "ng",
     "start": "scripts/start.sh",
