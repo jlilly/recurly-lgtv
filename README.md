@@ -1,27 +1,27 @@
-# RecurlyLgtv
+# Recurly LGTV Bug Demo
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.2.
+A demo app for the credit card number bug in recurly.
+
+## Prerequisites:
+
+- 2016 or newer LG TV with webOS
+- A network connection between this computer and the LG TV
+- LG Developer site account
+- webOS SDK CLI
+- Angular CLI
+
+### LG Specific setup:
+
+Follow the steps at: https://webostv.developer.lge.com/develop/app-test/. Be sure to install the full sdk to get a version locked chromium for remote debugging.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server and to launch onto a LAN connected LGTV. Be patient and follow the prompts on screen to launch to your connected LGTV. The app will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Debug
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `npm run debug` to launch a remote debugger. Be patient and follow the on screen prompts.
 
-## Build
+_Note_: The debugger is dependant upon a node script on your computer. Killing or backgrounding the process will terminate the communication between the remote debugger and the TV.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.2.
