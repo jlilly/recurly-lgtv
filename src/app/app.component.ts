@@ -69,7 +69,11 @@ export class AppComponent implements OnInit{
     recurly.on('field:submit', this.onSubmit.bind(this));
 
     // Hack to focus form
-    setTimeout(() => this.cardElement.focus(), 1000);
+    const focusHack = setInterval(() => {
+      this.cardElement.focus();
+    }, 100);
+
+    this.cardElement.on('focus', () => clearInterval(focusHack));
   }
 
   refocus() {
