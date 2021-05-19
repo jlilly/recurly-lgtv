@@ -54,6 +54,9 @@
  *
  */
 
+/** Polyfills for 2016 & 2017 model years */
+import 'core-js';
+
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
